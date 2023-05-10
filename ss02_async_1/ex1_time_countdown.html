@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<input id="txtNumber" type="number">
+<button onclick="handleClick()">Start</button>
+<h1 id="countNumber"></h1>
+
+<script>
+    //Cach 1
+    // function handleClick() {
+    //     let num = document.getElementById('txtNumber').value;
+    //     countDown(num)
+    // }
+    //
+    // function countDown(number) {
+    //     if (number < 0) return
+    //     setTimeout(function () {
+    //         document.getElementById('countNumber').innerText = number;
+    //         number = number-1;
+    //         countDown(number)
+    //     }, 1000)
+    // }
+
+    //Cach 2
+    // function handleClick() {
+    //     let num = document.getElementById('txtNumber').value;
+    //     let timerId = setInterval(function () {
+    //         if(num == 0) clearInterval(timerId)
+    //         document.getElementById('countNumber').innerText = num;
+    //         num--;
+    //     }, 1000)
+    // }
+
+    //cach 3
+    function sleep(ms) {
+        return new Promise((resolve) => {
+            setTimeout(resolve, ms)
+        })
+    }
+
+    async function countDown(i) {
+        while (i > 0) {
+            console.log(i)
+            document.getElementById('countNumber').innerHTML = i;
+            i--;
+            await sleep(1000);
+        }
+        document.getElementById('countNumber').innerHTML =  "counter finished:";
+    }
+
+    function handleClick(){
+        let number = document.getElementById('txtNumber').value;
+        countDown(number)
+    }
+</script>
+</body>
+</html>
