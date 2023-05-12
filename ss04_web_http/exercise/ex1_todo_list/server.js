@@ -3,35 +3,39 @@ const fs = require('fs')
 const qs = require('qs')
 
 let i = 1
+let todos = []
 const server = http.createServer((req, res) => {
     // server.on('connection', (stream) => {
     //     console.log('someone connected!', i++);
     // })
     if (req.method === 'GET') {
-        fs.readFile('./views/register.html', function (err, data) {
+        fs.readFile('./views/todo.html', function (err, data) {
             res.writeHead(200, {'Content-Type': 'text/html'})
             res.write(data)
             return res.end()
         })
     } else {
-        let data = ''
+
         req.on('data', chunk => {
-            console.log(chunk)
-            console.log(qs.parse(chunk))
-            console.log('Event-Data-b', data)
-            data += chunk
-            console.log('Event-Data-a', data)
+            console.log(qs.parse(chunk)) //ra mã ..... ==> muốn ra object phải chuyển chunk thành chuỗi
+            console.log(qs.parse('' + chunk))
+            todos.unshift(qs.parse('' + chunk).task)
         })
         req.on('end', () => {
-            const userInfo = qs.parse(data)
-            fs.readFile('./views/info.html', 'utf-8', function (err, datahtml) {
+            fs.readFile('./views/display.html', 'utf-8', function (err, datahtml) {
                 if (err) {
                     console.log(err)
                 }
-                datahtml = datahtml.replace('{name}', userInfo.name)
-                datahtml = datahtml.replace('{email}', userInfo.email)
-                datahtml = datahtml.replace('{password}', userInfo.password)
-                res.writeHead(200, {'Conten-Type': 'text/html'})
+                let tbody = ''
+                todos.map((value, index) => {
+                    tbody += '<tr>'
+                    tbody += '<td>' + (index + 1) + '</td>'
+                    tbody += '<td>' + value + '</td>'
+                    tbody += '</tr>'
+                })
+
+                datahtml = datahtml.replace('{data}', tbody)
+                res.writeHead(200, {'Content-Type': 'text/html'})
                 res.write(datahtml)
                 return res.end()
             })
